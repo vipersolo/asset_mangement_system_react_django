@@ -57,6 +57,17 @@ class RepairTicketViewSet(viewsets.ModelViewSet):
     serializer_class = RepairTicketSerializer
     permission_classes = [permissions.IsAuthenticated]
 
+
+    def get_queryset(self):
+        queryset = RepairTicket.objects.all()
+        # If the user is a technician, only show tickets assigned to them
+        user = self.request.user
+        if user.role == 'technician':
+            return queryset.filter(technician=user)
+        elif user.role == 'employee':
+            return RepairTicket.objects.filter(asset__assignment__employee=self.request.user).distinct()
+        return queryset
+
     def perform_create(self, serializer):
         ticket = serializer.save(status='pending')
 
@@ -101,6 +112,14 @@ class AssignmentViewSet(viewsets.ModelViewSet):
     queryset = Assignment.objects.all()
     serializer_class = AssignmentSerializer
     permission_classes = [permissions.IsAuthenticated]
+
+
+    def get_queryset(self):
+        user = self.request.user
+        if user.role == 'employee':
+            # Only show assets currently in their possession
+            return Assignment.objects.filter(employee=user, date_returned__isnull=True)
+        return Assignment.objects.all()
 
     def perform_create(self, serializer):
         assignment = serializer.save()
@@ -189,3 +208,16 @@ class TechnicianDashboardView(APIView):
 
 class MyTokenObtainPairView(TokenObtainPairView):
     serializer_class = MyTokenObtainPairSerializer
+
+
+#--------------------------------------
+#u can register this in router with new url or add logic in existing.
+#--------------------------------------
+# class EmployeeTicketViewSet(viewsets.ModelViewSet):
+#     # We can use the same serializer
+#     serializer_class = RepairTicketSerializer
+#     queryset = RepairTicket.objects.all()
+
+#     def get_queryset(self):
+#         # Filter tickets where the asset belongs to the logged-in employee
+#         return RepairTicket.objects.filter(asset__assignment__employee=self.request.user).distinct()
