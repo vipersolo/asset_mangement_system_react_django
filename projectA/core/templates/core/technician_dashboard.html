@@ -1,0 +1,56 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2>Repair Queue</h2>
+        <span class="badge bg-dark">Technician: {{ user.username }}</span>
+    </div>
+
+    <div class="card shadow">
+        <div class="card-body p-0">
+            <table class="table table-hover mb-0">
+                <thead class="table-light">
+                    <tr>
+                        <th>Asset</th>
+                        <th>Issue Reported</th>
+                        <th>Current Status</th>
+                        <th class="text-end">Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for ticket in tickets %}
+                    <tr>
+                        <td>
+                            <strong>{{ ticket.asset.name }}</strong><br>
+                            <small class="text-muted">SN: {{ ticket.asset.serial_number }}</small>
+                        </td>
+                        <td>{{ ticket.issue }}</td>
+                        <td>
+                            {% if ticket.status == 'pending' %}
+                                <span class="badge bg-warning text-dark">Pending</span>
+                            {% elif ticket.status == 'in_progress' %}
+                                <span class="badge bg-primary">In Progress</span>
+                            {% else %}
+                                <span class="badge bg-success">Completed</span>
+                            {% endif %}
+                        </td>
+                        <td class="text-end">
+                            {% if ticket.status == 'pending' %}
+                                <a href="{% url 'update_ticket_status' ticket.id 'in_progress' %}" class="btn btn-sm btn-outline-primary">Start Repair</a>
+                            {% elif ticket.status == 'in_progress' %}
+                                <a href="{% url 'update_ticket_status' ticket.id 'completed' %}" class="btn btn-sm btn-success">Mark Fixed</a>
+                            {% endif %}
+                        </td>
+                    </tr>
+                    {% empty %}
+                    <tr>
+                        <td colspan="4" class="text-center py-4 text-muted">No tickets found in the queue.</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+{% endblock %}

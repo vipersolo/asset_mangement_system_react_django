@@ -1,0 +1,34 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-5">
+        <div class="card shadow">
+            <div class="card-header bg-primary text-white">
+                <h4 class="mb-0">Assign Technician</h4>
+            </div>
+            <div class="card-body">
+                <p><strong>Asset:</strong> {{ ticket.asset.name }}</p>
+                <p><strong>Issue:</strong> {{ ticket.issue }}</p>
+                <hr>
+                <form method="post">
+                    {% csrf_token %}
+                    <div class="mb-3">
+                        <label for="technician_id" class="form-label">Select Technician</label>
+                        <select name="technician_id" id="technician_id" class="form-select" required>
+                            <option value="" selected disabled>Choose...</option>
+                            {% for tech in technicians %}
+                                <option value="{{ tech.id }}">{{ tech.username }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <div class="d-grid gap-2">
+                        <button type="submit" class="btn btn-success">Confirm Assignment</button>
+                        <a href="{% url 'manage_repairs' %}" class="btn btn-outline-secondary">Back to Queue</a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

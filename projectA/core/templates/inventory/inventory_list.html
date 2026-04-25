@@ -1,0 +1,54 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h2>Office Inventory (Consumables)</h2>
+    <a href="{% url 'inventory_create' %}" class="btn btn-primary btn-sm">+ New Item Type</a>
+</div>
+
+<div class="card shadow">
+    <div class="card-body p-0">
+        <table class="table table-hover align-middle mb-0">
+            <thead class="table-light">
+                <tr>
+                    <th>Item Description</th>
+                    <th class="text-center">Current Quantity</th>
+                    <th class="text-center">Min. Threshold</th>
+                    <th>Status</th>
+                    <th class="text-end">Adjust Stock</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for item in items %}
+                <tr class="{% if item.quantity <= item.threshold %}table-danger{% endif %}">
+                    <td><strong>{{ item.item_type }}</strong></td>
+                    <td class="text-center">{{ item.quantity }}</td>
+                    <td class="text-center text-muted">{{ item.threshold }}</td>
+                    <td>
+                        {% if item.quantity <= item.threshold %}
+                            <span class="badge bg-danger">LOW STOCK</span>
+                        {% else %}
+                            <span class="badge bg-success">OK</span>
+                        {% endif %}
+                    </td>
+                    <td class="text-end">
+                        <div class="btn-group shadow-sm">
+                            <a href="{% url 'update_stock' item.pk 'remove' %}" class="btn btn-outline-secondary btn-sm">-</a>
+                            <a href="{% url 'update_stock' item.pk 'add' %}" class="btn btn-outline-secondary btn-sm">+</a>
+                        </div>
+                    </td>
+                </tr>
+                {% empty %}
+                <tr>
+                    <td colspan="5" class="text-center py-4">No inventory items found. Add some via Django Admin.</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<div class="mt-3 small text-muted">
+    <i class="bi bi-info-circle"></i> Items highlighted in red have reached or fallen below their minimum threshold.
+</div>
+{% endblock %}

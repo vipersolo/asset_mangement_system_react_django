@@ -1,0 +1,30 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="container">
+    <h3>My Assigned Equipment</h3>
+    <div class="card shadow-sm mt-3">
+        <div class="card-body">
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>Asset Name</th>
+                        <th>Serial Number</th>
+                        <th>Assigned On</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for a in assignments %}
+                    <tr>
+                        <td>{{ a.asset.name }}</td>
+                        <td><code>{{ a.asset.serial_number }}</code></td>
+                        <td>{{ a.date_assigned }}</td>
+                    </tr>
+                    {% empty %}
+                    <tr><td colspan="3" class="text-center">No assets currently assigned to you.</td></tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+{% endblock %}

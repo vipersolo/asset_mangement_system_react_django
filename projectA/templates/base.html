@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AssetTrack Pro</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body class="bg-light">
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark mb-4">
+        <div class="container">
+            <a class="navbar-brand" href="{% url 'dashboard_redirect' %}">AssetManager Pro</a>
+            
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav me-auto">
+                    {% if user.is_authenticated %}
+                        <li class="nav-item">
+                            <a class="nav-link" href="{% url 'dashboard_redirect' %}">Dashboard</a>
+                        </li>
+
+                        {% if user.role == 'admin' %}
+                            <li class="nav-item">
+                                <a class="nav-link" href="{% url 'asset_list' %}">Manage Assets</a> </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="{% url 'assignment_list' %}">Assignments</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="{% url 'inventory_list' %}">Inventory</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="{% url 'manage_repairs' %}">Repair Queue</a>
+                            </li>
+                        {% endif %}
+
+                        {% if user.role == 'employee' %}
+                            <li class="nav-item">
+                                <a class="nav-link" href="{% url 'my_assets' %}">My Assets</a>
+                            </li>
+                        {% endif %}
+                    {% endif %}
+                </ul>
+
+                <div class="d-flex">
+                    {% if user.is_authenticated %}
+                        <span class="navbar-text me-3 text-info">
+                            {{ user.username }} ({{ user.get_role_display }})
+                        </span>
+                        <form action="{% url 'logout' %}" method="post" style="display:inline;">
+                            {% csrf_token %}
+                            <button type="submit" class="btn btn-outline-danger btn-sm">Logout</button>
+                        </form>
+                    {% else %}
+                        <a href="{% url 'login' %}" class="btn btn-outline-success btn-sm">Login</a>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <main class="container">
+        {% block content %}
+        {% endblock %}
+    </main>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

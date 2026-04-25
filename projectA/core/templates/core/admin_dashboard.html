@@ -1,0 +1,71 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container">
+    <h2 class="mb-4">Admin Insights</h2>
+
+    <div class="row mb-4">
+        <div class="col-md-4">
+            <div class="card bg-primary text-white shadow">
+                <div class="card-body">
+                    <h5>Total Assets</h5>
+                    <h2 class="display-4">{{ total_assets }}</h2>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card bg-warning text-dark shadow">
+                <div class="card-body">
+                    <h5>Pending Repairs</h5>
+                    <h2 class="display-4">{{ pending_repairs }}</h2>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card bg-danger text-white shadow">
+                <div class="card-body">
+                    <h5>Low Stock Items</h5>
+                    <h2 class="display-4">{{ low_stock }}</h2>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-6">
+            <div class="card shadow p-3">
+                <h5 class="card-title text-center">Asset Status Distribution</h5>
+                <canvas id="assetChart"></canvas>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<script>
+    const ctx = document.getElementById('assetChart').getContext('2d');
+    new Chart(ctx, {
+        type: 'pie',
+        data: {
+            labels: {{ chart_labels|safe }},
+            datasets: [{
+                label: '# of Assets',
+                data: {{ chart_data|safe }},
+                backgroundColor: [
+                    'rgba(75, 192, 192, 0.7)', // Available
+                    'rgba(54, 162, 235, 0.7)', // Assigned
+                    'rgba(255, 99, 132, 0.7)'  // Repair
+                ],
+                borderWidth: 1
+            }]
+        },
+        options: {
+            responsive: true,
+            plugins: {
+                legend: { position: 'bottom' }
+            }
+        }
+    });
+</script>
+{% endblock %}

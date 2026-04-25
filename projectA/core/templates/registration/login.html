@@ -1,0 +1,39 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-4">
+            <div class="card shadow">
+                <div class="card-header bg-primary text-white">
+                    <h4 class="mb-0">Asset System Login</h4>
+                </div>
+                <div class="card-body">
+                    <form method="post">
+                        {% csrf_token %}
+                        
+                        {% for field in form %}
+                            <div class="mb-3">
+                                <label class="form-label">{{ field.label }}</label>
+                                {{ field }}
+                                {% if field.errors %}
+                                    <div class="text-danger small">{{ field.errors }}</div>
+                                {% endif %}
+                            </div>
+                        {% endfor %}
+
+                        <button type="submit" class="btn btn-primary w-100">Login</button>
+                    </form>
+                </div>
+                <div class="card-footer text-center">
+                    <small class="text-muted">Contact IT for account issues</small>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    input { width: 100%; border-radius: 5px; border: 1px solid #ccc; padding: 8px; }
+</style>
+{% endblock %}

@@ -1,0 +1,63 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container">
+    <h2 class="mb-4">My Dashboard</h2>
+
+    <div class="row">
+        <div class="col-md-8">
+            <div class="card shadow mb-4">
+                <div class="card-header bg-dark text-white">
+                    <h5 class="mb-0">My Assigned Assets</h5>
+                </div>
+                <div class="card-body">
+                    <table class="table table-hover">
+                        <thead>
+                            <tr>
+                                <th>Asset Name</th>
+                                <th>Type</th>
+                                <th>Assigned Date</th>
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for assignment in my_assignments %}
+                            <tr>
+                                <td>{{ assignment.asset.name }}</td>
+                                <td>{{ assignment.asset.type }}</td>
+                                <td>{{ assignment.date_assigned }}</td>
+                                <td>
+                                    <a href="{% url 'report_issue' assignment.asset.id %}" class="btn btn-sm btn-warning">Report Issue</a>
+                                </td>
+                            </tr>
+                            {% empty %}
+                            <tr>
+                                <td colspan="4" class="text-center text-muted">No assets assigned to you.</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-4">
+            <div class="card shadow">
+                <div class="card-header bg-info text-white">
+                    <h5 class="mb-0">Ticket Status</h5>
+                </div>
+                <ul class="list-group list-group-flush">
+                    {% for ticket in my_tickets %}
+                    <li class="list-group-item d-flex justify-content-between align-items-center">
+                        {{ ticket.asset.name }}
+                        <span class="badge bg-secondary">{{ ticket.status }}</span>
+                    </li>
+                    {% empty %}
+                    <li class="list-group-item text-muted">No active repair tickets.</li>
+                    {% endfor %}
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

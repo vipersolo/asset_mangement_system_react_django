@@ -1,0 +1,30 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-6">
+        <div class="card shadow">
+            <div class="card-header bg-warning">
+                <h4 class="mb-0">Report Issue: {{ asset.name }}</h4>
+            </div>
+            <div class="card-body">
+                <p class="text-muted">Serial Number: {{ asset.serial_number }}</p>
+                <form method="post">
+                    {% csrf_token %}
+                    {{ form.as_p }}
+                    <div class="d-grid gap-2">
+                        <button type="submit" class="btn btn-danger">Submit Repair Ticket</button>
+                        <a href="{% url 'employee_dashboard' %}" class="btn btn-outline-secondary">Cancel</a>
+                    </div>
+                    {% comment %} {% if form.non_field_errors %}
+                    <div class="alert alert-danger">
+                        {% for error in form.non_field_errors %}
+                        {{ error }}
+                        {% endfor %}
+                    </div>
+                    {% endif %} {% endcomment %}
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
