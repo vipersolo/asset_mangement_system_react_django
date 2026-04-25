@@ -1,0 +1,17 @@
+.nav-link {
+    padding: 12px 20px;
+    border-radius: 8px;
+    transition: 0.3s;
+}
+
+.nav-link:hover {
+    background: rgba(255, 255, 255, 0.1);
+    color: #0dcaf0 !important;
+}
+
+/* This targets the link matching the current URL */
+.nav-link.active {
+    background: #0dcaf0 !important;
+    color: white !important;
+    font-weight: bold;
+}
