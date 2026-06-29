@@ -7,10 +7,38 @@ class UserSerializer(serializers.ModelSerializer):
         model = User
         fields = ['id', 'username', 'email', 'role']
 
+
+
 class AssetSerializer(serializers.ModelSerializer):
+
     class Meta:
         model = Asset
-        fields = '__all__'
+        fields = "__all__"
+
+    def validate(self, attrs):
+        """
+        Prevent editing an asset while assigned or under repair.
+        """
+        if self.instance:
+            if self.instance.status in ["assigned", "repair"]:
+                raise serializers.ValidationError(
+                    "This asset cannot be edited while it is assigned or under repair."
+                )
+
+        return attrs
+
+    def validate_serial_number(self, value):
+        """
+        Serial number can never be changed.
+        """
+        if self.instance:
+            if self.instance.serial_number != value:
+                raise serializers.ValidationError(
+                    "Serial number cannot be modified."
+                )
+
+        return value
+
 
 class InventorySerializer(serializers.ModelSerializer):
     class Meta:

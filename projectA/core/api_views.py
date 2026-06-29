@@ -26,6 +26,7 @@ class UserViewSet(viewsets.ModelViewSet):
     # Usually, only Admins should be able to see the full user list
     permission_classes = [permissions.IsAuthenticated]
 
+
 class AssetViewSet(viewsets.ModelViewSet):
     queryset = Asset.objects.all().order_by('-purchase_date')
     serializer_class = AssetSerializer
