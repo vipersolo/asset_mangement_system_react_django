@@ -49,8 +49,9 @@ function App() {
                         </ProtectedRoute>
                     } />
 
-                    <Route path="/" element={<Navigate to="/admin" />} />
+                    <Route path="/" element={<Navigate to="/login" />} />
                     
+                               
                     {/* Protected Technician Route */}
                     <Route path="/repairs" element={
                         <ProtectedRoute allowedRoles={['admin', 'technician']}>
